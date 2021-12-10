@@ -1,7 +1,7 @@
 const handleError = (err) => {
 	console.log('error');
 	console.error(err);
-	$("#logger").text(messageObj.error);
+	$("#logger").text(err);
 };
 
 const redirect = (response) => {
@@ -19,9 +19,9 @@ const sendAjax = (type, action, data, success) => {
 		error:		function(xhr, status, error) {
 			try {
 				var messageObj = JSON.parse(xhr.responseText);
-				$("#logger").text(messageObj.error);
+				handleError(messageObj);
 			} catch(e) {
-				console.log("Unparsable Error Response");
+				handleError("Unparsable Error Response");
 			}
 		}
 	});

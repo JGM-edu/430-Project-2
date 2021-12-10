@@ -70,6 +70,7 @@ const signup		= (req, res) => {
 			username : req.body.username,
 			salt,
 			password : hash,
+			watchlist: {},
 		};
 
 		const newAccount = new Account.AccountModel(accountData);

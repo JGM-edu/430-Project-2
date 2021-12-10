@@ -455,7 +455,7 @@ $(document).ready(function () {
 var handleError = function handleError(err) {
   console.log('error');
   console.error(err);
-  $("#logger").text(messageObj.error);
+  $("#logger").text(err);
 };
 
 var redirect = function redirect(response) {
@@ -473,9 +473,9 @@ var sendAjax = function sendAjax(type, action, data, success) {
     error: function error(xhr, status, _error) {
       try {
         var messageObj = JSON.parse(xhr.responseText);
-        $("#logger").text(messageObj.error);
+        handleError(messageObj);
       } catch (e) {
-        console.log("Unparsable Error Response");
+        handleError("Unparsable Error Response");
       }
     }
   });

@@ -20,16 +20,16 @@ const handleSignup = (e) => {
 
 	// $("#userMessage").animate({width:'hide'}, 350);
 
-	if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
-		// handleError("All fields required");
-		return false;
-	}
+	// if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
+	// 	// handleError("All fields required");
+	// 	return false;
+	// }
 	
 	if ($("#pass").val() !== $("#pass2").val()) {
-		// handleError("Passwords don't match");
+		handleError("Passwords don't match");
 		return false;
 	}
-
+	// debugger;
 	sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
 
 	return false;

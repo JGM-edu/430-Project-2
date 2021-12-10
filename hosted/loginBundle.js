@@ -14,16 +14,16 @@ var handleLogin = function handleLogin(e) {
 
 var handleSignup = function handleSignup(e) {
   e.preventDefault(); // $("#userMessage").animate({width:'hide'}, 350);
-
-  if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
-    // handleError("All fields required");
-    return false;
-  }
+  // if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
+  // 	// handleError("All fields required");
+  // 	return false;
+  // }
 
   if ($("#pass").val() !== $("#pass2").val()) {
-    // handleError("Passwords don't match");
+    handleError("Passwords don't match");
     return false;
-  }
+  } // debugger;
+
 
   sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
   return false;
@@ -169,7 +169,7 @@ $(document).ready(function () {
 var handleError = function handleError(err) {
   console.log('error');
   console.error(err);
-  $("#logger").text(messageObj.error);
+  $("#logger").text(err);
 };
 
 var redirect = function redirect(response) {
@@ -187,9 +187,9 @@ var sendAjax = function sendAjax(type, action, data, success) {
     error: function error(xhr, status, _error) {
       try {
         var messageObj = JSON.parse(xhr.responseText);
-        $("#logger").text(messageObj.error);
+        handleError(messageObj);
       } catch (e) {
-        console.log("Unparsable Error Response");
+        handleError("Unparsable Error Response");
       }
     }
   });

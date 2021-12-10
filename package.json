@@ -1,0 +1,66 @@
+{
+  "name": "Logins",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.16.0",
+    "npm": "6.13.7"
+  },
+  "description": "A Simple Login Example using Node.js, Mongo and Redis",
+  "main": "./server/app.js",
+  "scripts": {
+    "build": "npm run buildLoginBundle && npm run buildAppBundle",
+    "bAndR": "npm run buildLoginBundle && npm run buildAppBundle && npm run start",
+    "buildLoginBundle": "babel ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/loginBundle.js",
+    "buildAppBundle": "babel ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
+    "watch": "babel --watch ./client --out-file ./hosted/bundle.js",
+    "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/loginBundle.js",
+    "watchAppBundle": "babel --watch ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
+    "nodemon": "nodemon --watch ./server ./server/app.js",
+    "start": "node ./server/app.js",
+    "pretest": "eslint ./server --fix",
+    "test": "echo \"Tests complete\""
+  },
+  "keywords": [
+    "Node",
+    "MVC",
+    "Redis",
+    "Login"
+  ],
+  "author": "Cody Van De Mark",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.12.7",
+    "eslint": "^8.4.1",
+    "eslint-config-airbnb": "^19.0.2",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "@babel/eslint-parser": "^7.16.3",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "connect-redis": "^4.0.4",
+    "cookie-parser": "^1.4.5",
+    "csurf": "^1.11.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.0",
+    "helmet": "^3.21.3",
+    "mongoose": "^6.0.12",
+    "moviedb-promise": "^3.1.12",
+    "querystring": "^0.2.1",
+    "redis": "^3.1.2",
+    "serve-favicon": "^2.5.0",
+    "tmdbv3": "^0.1.2",
+    "underscore": "^1.13.1"
+  },
+  "config": {
+	  "babel": "./babelrc"
+  }
+}

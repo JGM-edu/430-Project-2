@@ -1,0 +1,51 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+	"parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+		"requireConfigFile": "false"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+		"indent": ["error", "tab"],
+		"quotes": ["error", "double", { "allowTemplateLiterals": false }],
+		"no-tabs": "off",
+		"no-mixed-spaces-and-tabs": "off",
+		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+		"no-plusplus": "off",
+		"no-multi-spaces": ["error", { "exceptions": { "Property": true } }],
+		"key-spacing": ["error", {
+			"multiLine": {
+				"beforeColon": true,
+				"afterColon": true
+			},
+			"align": {
+				"beforeColon": true,
+				"afterColon": true,
+				"on": "colon"
+			}
+		}],
+		"import/extensions": "warn",
+		"no-underscore-dangle": "warn",
+		"nonblock-statement-body-position": ["error", "below"],
+		"curly": ["error", "multi"]
+    }
+}

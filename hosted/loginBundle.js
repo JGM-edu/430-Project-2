@@ -2,11 +2,10 @@
 
 var handleLogin = function handleLogin(e) {
   e.preventDefault(); // $("#userMessage").animate({width:'hide'}, 350);
-
-  if ($("#user").val() == '' || $("#pass").val() == '') {
-    // handleError("Username or password empty");
-    return false;
-  }
+  // if ($("#user").val() == '' || $("#pass").val() == '') {
+  // 	// handleError("Username or password empty");
+  // 	return false;
+  // }
 
   console.log($("input[name=_csrf]").val());
   sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
@@ -44,14 +43,16 @@ var LoginWindow = function LoginWindow(props) {
     id: "user",
     type: "text",
     name: "username",
-    placeholder: "username"
+    placeholder: "username",
+    required: true
   }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "pass"
   }, "Password: "), /*#__PURE__*/React.createElement("input", {
     id: "pass",
     type: "password",
     name: "pass",
-    placeholder: "password"
+    placeholder: "password",
+    required: true
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
@@ -60,6 +61,8 @@ var LoginWindow = function LoginWindow(props) {
     className: "formSubmit",
     type: "submit",
     value: "Sign in"
+  }), /*#__PURE__*/React.createElement("span", {
+    id: "logger"
   }));
 };
 
@@ -77,21 +80,24 @@ var SignupWindow = function SignupWindow(props) {
     id: "user",
     type: "text",
     name: "username",
-    placeholder: "username"
+    placeholder: "username",
+    required: true
   }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "pass"
   }, "Password: "), /*#__PURE__*/React.createElement("input", {
     id: "pass",
     type: "password",
     name: "pass",
-    placeholder: "password"
+    placeholder: "password",
+    required: true
   }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "pass2"
   }, "Password: "), /*#__PURE__*/React.createElement("input", {
     id: "pass2",
     type: "password",
     name: "pass2",
-    placeholder: "retype password"
+    placeholder: "retype password",
+    required: true
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
@@ -100,6 +106,8 @@ var SignupWindow = function SignupWindow(props) {
     className: "formSubmit",
     type: "submit",
     value: "Sign Up"
+  }), /*#__PURE__*/React.createElement("span", {
+    id: "logger"
   }));
 };
 
@@ -107,12 +115,28 @@ var createLoginWindow = function createLoginWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(LoginWindow, {
     csrf: csrf
   }), document.querySelector("#content"));
+  document.querySelectorAll("input[required]").forEach(function (elem) {
+    elem.addEventListener('focusin', function (e) {
+      e.currentTarget.style.backgroundColor = null;
+    });
+    elem.addEventListener('focusout', function (e) {
+      if (!e.currentTarget.value) e.currentTarget.style.backgroundColor = "pink";
+    });
+  });
 };
 
 var createSignupWindow = function createSignupWindow(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(SignupWindow, {
     csrf: csrf
   }), document.querySelector("#content"));
+  document.querySelectorAll("input[required]").forEach(function (elem) {
+    elem.addEventListener('focusin', function (e) {
+      e.currentTarget.style.backgroundColor = null;
+    });
+    elem.addEventListener('focusout', function (e) {
+      if (!e.currentTarget.value) e.currentTarget.style.backgroundColor = "pink";
+    });
+  });
 };
 
 var setup = function setup(csrf) {
@@ -161,8 +185,12 @@ var sendAjax = function sendAjax(type, action, data, success) {
     dataType: "json",
     success: success,
     error: function error(xhr, status, _error) {
-      var messageObj = JSON.parse(xhr.responseText);
-      $("#logger").text(messageObj.error);
+      try {
+        var messageObj = JSON.parse(xhr.responseText);
+        $("#logger").text(messageObj.error);
+      } catch (e) {
+        console.log("Unparsable Error Response");
+      }
     }
   });
 };

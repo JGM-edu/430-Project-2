@@ -471,8 +471,12 @@ var sendAjax = function sendAjax(type, action, data, success) {
     dataType: "json",
     success: success,
     error: function error(xhr, status, _error) {
-      var messageObj = JSON.parse(xhr.responseText);
-      $("#logger").text(messageObj.error);
+      try {
+        var messageObj = JSON.parse(xhr.responseText);
+        $("#logger").text(messageObj.error);
+      } catch (e) {
+        console.log("Unparsable Error Response");
+      }
     }
   });
 };

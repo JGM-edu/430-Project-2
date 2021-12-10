@@ -3,10 +3,10 @@ const handleLogin = (e) => {
 
 	// $("#userMessage").animate({width:'hide'}, 350);
 
-	if ($("#user").val() == '' || $("#pass").val() == '') {
-		// handleError("Username or password empty");
-		return false;
-	}
+	// if ($("#user").val() == '' || $("#pass").val() == '') {
+	// 	// handleError("Username or password empty");
+	// 	return false;
+	// }
 	
 	console.log($("input[name=_csrf]").val());
 
@@ -44,11 +44,12 @@ const LoginWindow = (props) => {
 				method="POST"
 				className="mainForm">
 			<label htmlFor="username">Username: </label>
-			<input id="user" type="text" name="username" placeholder="username"/>
+			<input id="user" type="text" name="username" placeholder="username" required/>
 			<label htmlFor="pass">Password: </label>
-			<input id="pass" type="password" name="pass" placeholder="password"/>
+			<input id="pass" type="password" name="pass" placeholder="password" required/>
 			<input type="hidden" name="_csrf" value={props.csrf}/>
 			<input className="formSubmit" type="submit" value="Sign in"/>
+			<span id="logger"></span>
 		</form>
 	);
 };
@@ -62,13 +63,14 @@ const SignupWindow = (props) => {
 				method="POST"
 				className="mainForm">
 			<label htmlFor="username">Username: </label>
-			<input id="user" type="text" name="username" placeholder="username"/>
+			<input id="user" type="text" name="username" placeholder="username" required/>
 			<label htmlFor="pass">Password: </label>
-			<input id="pass" type="password" name="pass" placeholder="password"/>
+			<input id="pass" type="password" name="pass" placeholder="password" required/>
 			<label htmlFor="pass2">Password: </label>
-			<input id="pass2" type="password" name="pass2" placeholder="retype password"/>
+			<input id="pass2" type="password" name="pass2" placeholder="retype password" required/>
 			<input type="hidden" name="_csrf" value={props.csrf}/>
 			<input className="formSubmit" type="submit" value="Sign Up"/>
+			<span id="logger"></span>
 		</form>
 	);
 };
@@ -78,6 +80,15 @@ const createLoginWindow = (csrf) => {
 		<LoginWindow csrf={csrf} />,
 		document.querySelector("#content")
 	);
+	document.querySelectorAll("input[required]").forEach((elem) => {
+		elem.addEventListener('focusin', (e) => {
+			e.currentTarget.style.backgroundColor = null;
+		});
+		elem.addEventListener('focusout', (e) => {
+			if (!e.currentTarget.value)
+				e.currentTarget.style.backgroundColor = "pink";
+		});
+	});
 };
 
 const createSignupWindow = (csrf) => {
@@ -85,6 +96,15 @@ const createSignupWindow = (csrf) => {
 		<SignupWindow csrf={csrf} />,
 		document.querySelector("#content")
 	);
+	document.querySelectorAll("input[required]").forEach((elem) => {
+		elem.addEventListener('focusin', (e) => {
+			e.currentTarget.style.backgroundColor = null;
+		});
+		elem.addEventListener('focusout', (e) => {
+			if (!e.currentTarget.value)
+				e.currentTarget.style.backgroundColor = "pink";
+		});
+	});
 };
 
 const setup = (csrf) => {
@@ -112,6 +132,4 @@ const getToken = () => {
 	});
 };
 
-$(document).ready(function() {
-	getToken();
-});
+$(document).ready(function() { getToken(); });

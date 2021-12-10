@@ -26,7 +26,7 @@ const searchShows = (req, res) => {
 		// return e.results;
 		// return res.render('app', { csrfToken: req.csrfToken(), watchlist: e.results });
 	}, (e) => {
-		console.log(`search Shows Error Caught${e?.message}`);
+		console.log(`search Shows Error Caught${e.message}`);
 		// console.log(e);
 		return res.status(400).json({ error: "Some error" });
 	});

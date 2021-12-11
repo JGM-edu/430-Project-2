@@ -4,7 +4,7 @@ const requests = require("./requests");
 
 /**
  *
- * @param {import('express').Express} app
+ * @param {Express.Application} app
  */
 const router = (app) => {
 	app.get("/getShows", 				mid.requiresLogin, controllers.Account.getWatchlist);

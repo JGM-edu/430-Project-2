@@ -3,7 +3,7 @@
 var _this = void 0;
 
 // #region Poster Resolution
-var posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
+var posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2";
 var posterNotFoundPath = "/assets/img/posterNotFound.png";
 /**
  * 
@@ -199,16 +199,63 @@ var ShowDetail = function ShowDetail(props) {
     }, "No Show Data"));
   }
 
+  console.log(props.showData);
+  var sData = props.showData;
+  var seasonList = [/*#__PURE__*/React.createElement("div", {
+    className: "seasonElem seasonElemTitles",
+    key: "titles"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "seasonPoster seasonElemTitle"
+  }, "Poster"), /*#__PURE__*/React.createElement("span", {
+    className: "seasonElemItem seasonNumber seasonElemTitle"
+  }, "#"), /*#__PURE__*/React.createElement("span", {
+    className: "seasonElemItem seasonName seasonElemTitle"
+  }, "Name"), /*#__PURE__*/React.createElement("span", {
+    className: "seasonElemItem seasonEpisodeCount seasonElemTitle"
+  }, "Length"), /*#__PURE__*/React.createElement("span", {
+    className: "seasonElemItem seasonOverview seasonElemTitle"
+  }, "Overview"))];
+
+  for (var i = 0; (_sData$seasons = sData.seasons) !== null && _sData$seasons !== void 0 && _sData$seasons.length && i < sData.seasons.length; i++) {
+    var _sData$seasons;
+
+    var season = sData.seasons[i];
+    seasonList.push( /*#__PURE__*/React.createElement("div", {
+      className: "seasonElem",
+      key: season.id,
+      "data-season_id": season.id
+    }, /*#__PURE__*/React.createElement("img", {
+      className: "seasonElemItem seasonPoster",
+      src: resolvePosterPath(season.poster_path),
+      alt: "Season ".concat(season.season_number, "'s Poster")
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "seasonElemItem seasonNumber"
+    }, season.season_number), /*#__PURE__*/React.createElement("span", {
+      className: "seasonElemItem seasonName"
+    }, season.name), /*#__PURE__*/React.createElement("span", {
+      className: "seasonElemItem seasonEpisodeCount"
+    }, season.episode_count), /*#__PURE__*/React.createElement("span", {
+      className: "seasonElemItem seasonOverview"
+    }, season.overview)));
+  }
+
+  if (seasonList.length > 1) seasonList = /*#__PURE__*/React.createElement("div", {
+    className: "seasonList"
+  }, seasonList);
   return /*#__PURE__*/React.createElement("div", {
     className: "showDetail",
     "data-showID": props.showData.id,
     "data-id": props.showData.id,
     "data-name": props.showData.name,
     "data-number_of_epsisodes": props.showData.number_of_epsisodes
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mainElementsContainer"
   }, /*#__PURE__*/React.createElement("img", {
     src: resolvePosterPath(props.showData.poster_path),
     alt: "".concat(props.showData.name, "'s Poster")
-  }), /*#__PURE__*/React.createElement("h1", {
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "textContent"
+  }, /*#__PURE__*/React.createElement("h1", {
     className: "name"
   }, props.showData.name), /*#__PURE__*/React.createElement("h2", {
     className: "airDate"
@@ -216,7 +263,7 @@ var ShowDetail = function ShowDetail(props) {
     className: "numEpisodes"
   }, "Number of Episodes: ", props.showData.number_of_episodes), /*#__PURE__*/React.createElement("p", {
     className: "overview"
-  }, props.showData.overview), /*#__PURE__*/React.createElement("button", {
+  }, props.showData.overview))), seasonList, /*#__PURE__*/React.createElement("button", {
     id: "bttn_showDetailHide"
   }, "X"), /*#__PURE__*/React.createElement("button", {
     id: "bttn_toggleShowInWatchlist",

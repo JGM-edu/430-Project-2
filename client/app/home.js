@@ -1,5 +1,5 @@
 // #region Poster Resolution
-const posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
+const posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2";
 const posterNotFoundPath = "/assets/img/posterNotFound.png";
 /**
  * 
@@ -184,16 +184,49 @@ const ShowDetail = (props) => {
 			</div>
 		);
 	}
+	console.log(props.showData);
+	const sData = props.showData;
+	let seasonList = [
+		<div className="seasonElem seasonElemTitles" key="titles">
+			<span className="seasonPoster seasonElemTitle">Poster</span>
+			<span className="seasonElemItem seasonNumber seasonElemTitle">#</span>
+			<span className="seasonElemItem seasonName seasonElemTitle">Name</span>
+			<span className="seasonElemItem seasonEpisodeCount seasonElemTitle">Length</span>
+			<span className="seasonElemItem seasonOverview seasonElemTitle">Overview</span>
+		</div>
+	];
+	for (let i = 0; sData.seasons?.length && i < sData.seasons.length; i++) {
+		const season = sData.seasons[i];
+		seasonList.push(
+			<div className="seasonElem" key={season.id} data-season_id={season.id}>
+				<img className="seasonElemItem seasonPoster" src={resolvePosterPath(season.poster_path)} alt={`Season ${season.season_number}'s Poster`}></img>
+				<span className="seasonElemItem seasonNumber">{season.season_number}</span>
+				<span className="seasonElemItem seasonName">{season.name}</span>
+				<span className="seasonElemItem seasonEpisodeCount">{season.episode_count}</span>
+				<span className="seasonElemItem seasonOverview">{season.overview}</span>
+			</div>
+		);
+	}
+	if (seasonList.length > 1)
+		seasonList = (
+			<div className="seasonList">
+				{seasonList}
+			</div>
+		);
 	return (
 		<div className="showDetail" data-showID={props.showData.id} data-id={props.showData.id} data-name={props.showData.name} data-number_of_epsisodes={props.showData.number_of_epsisodes}>
-			<img src={resolvePosterPath(props.showData.poster_path)} alt={`${props.showData.name}'s Poster`} />
-			<h1 className="name">{props.showData.name}</h1>
-			<h2 className="airDate">{props.showData.first_air_date}</h2>
-			<span className="numEpisodes">Number of Episodes: {props.showData.number_of_episodes}</span>
-			<p className="overview">{props.showData.overview}</p>
+			<div className="mainElementsContainer">
+				<img src={resolvePosterPath(props.showData.poster_path)} alt={`${props.showData.name}'s Poster`} />
+				<div className="textContent">
+					<h1 className="name">{props.showData.name}</h1>
+					<h2 className="airDate">{props.showData.first_air_date}</h2>
+					<span className="numEpisodes">Number of Episodes: {props.showData.number_of_episodes}</span>
+					<p className="overview">{props.showData.overview}</p>
+				</div>
+			</div>
+			{seasonList}
 			<button id="bttn_showDetailHide">X</button>
 			<button id="bttn_toggleShowInWatchlist" data-id={props.showData.id}>{(isInWatchlist(props.showData.id)) ? "-" : "+"}</button>
-			{/* (getSessionWatchlist()?.filter((elem) => elem != props.showData.id).length != 0) ? "-" : "+" */}
 		</div>
 	);
 };

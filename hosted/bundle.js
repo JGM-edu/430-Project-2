@@ -302,7 +302,7 @@ var SearchbarForm = function SearchbarForm(props) {
   }), /*#__PURE__*/React.createElement("input", {
     className: "searchSubmit",
     type: "submit",
-    value: "Make Domo"
+    value: "Search"
   }));
 }; // #endregion
 

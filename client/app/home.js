@@ -248,10 +248,8 @@ const SearchbarForm = (props) => {
 				<option value="TV">TV Show</option>
 				<option value="Movie">Movie</option>
 			</select></div>
-			{/* <div><label htmlFor="age">Age:&nbsp;&nbsp;</label>
-			<input id="domoAge" type="text" name="age" placeholder="Domo Age"/></div> */}
 			<input type="hidden" name="_csrf" value={props.csrf}/>
-			<input className="searchSubmit" type="submit" value="Make Domo"/>
+			<input className="searchSubmit" type="submit" value="Search"/>
 		</form>
 	);
 };

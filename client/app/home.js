@@ -261,11 +261,11 @@ const SearchbarForm = (props) => {
 		>
 			<div><label htmlFor="name">Search For:&nbsp;&nbsp;</label>
 			<input id="searchbar" type="text" name="name" placeholder="Show Name"/></div>
-			<div><label htmlFor="mediaType">Medium:&nbsp;&nbsp;</label>
+			{/* <div><label htmlFor="mediaType">Medium:&nbsp;&nbsp;</label>
 			<select name="mediaType" id="medium-select">
 				<option value="TV">TV Show</option>
 				<option value="Movie">Movie</option>
-			</select></div>
+			</select></div> */}
 			<input type="hidden" name="_csrf" value={props.csrf}/>
 			<input className="searchSubmit" type="submit" value="Search"/>
 		</form>

@@ -71,14 +71,15 @@ AccountSchema.statics.generateHash = (password, callback) => {
 		iterations,
 		keyLength,
 		"RSA-SHA512",
-		(err, hash) => callback(salt, hash.toString("hex")));
+		(err, hash) => callback(salt, hash.toString("hex")),
+	);
 };
 
 /**
  * Attempts to authenticate the given user and password.
  * @param {string} username The username
- * @param {string} password 
- * @param {Function} callback 
+ * @param {string} password
+ * @param {Function} callback
  */
 AccountSchema.statics.authenticate = (username, password, callback) => {
 	AccountModel.findByUsername(username, (err, doc) => {
@@ -98,5 +99,5 @@ AccountModel = mongoose.model("Account", AccountSchema);
 
 module.exports = {
 	AccountModel,
-	AccountSchema
+	AccountSchema,
 };

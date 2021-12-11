@@ -42,6 +42,6 @@ const getAccountWatchlist = (req, res) => UserData.UserDataModel.findByOwner(
 
 module.exports = {
 	watchlistPage,
-	getShows: getAccountWatchlist,
+	getShows : getAccountWatchlist,
 	searchShows,
 };

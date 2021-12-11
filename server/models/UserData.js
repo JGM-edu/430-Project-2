@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const _ = require("underscore");
 
-
 /**
  * Model for user information, specifically lists.
  * @type {mongoose.Model}
@@ -49,7 +48,7 @@ UserDataSchema.statics.toAPI = (doc) => ({
 });
 
 UserDataSchema.statics.findByOwner = (ownerId, callback) => {
-	const search = {owner : convertId(ownerId)};
+	const search = { owner: convertId(ownerId) };
 	return UserDataModel.find(search).select("list").lean().exec(callback);
 };
 

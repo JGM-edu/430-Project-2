@@ -15,6 +15,11 @@ const handleFormSubmission = (e) => {
 	searchShows(e);
 	return false;
 };
+
+/**
+ * Event handler that sends a request to /searchShows
+ * @param {Event} e The event arguments.
+ */
 const searchShows = (e) => {
 	e.preventDefault();
 	console.log(`/searchShows?query=${document.querySelector("#searchbar").value}`);
@@ -33,6 +38,10 @@ const searchShows = (e) => {
 	});
 };
 
+/**
+ * A wrapper for {@linkcode requestGetShow}.
+ * @param {Event} e The event's arguments.
+ */
 const getShow = (e) => {
 	e.preventDefault();
 	const showID = e.currentTarget.dataset['id'];
@@ -55,6 +64,11 @@ const getShow = (e) => {
 	});
 };
 
+/**
+ * Sends a request to /getShow
+ * @param {string} showID The show to get.
+ * @param {Function} callback 
+ */
 const requestGetShow = (showID, callback) => {
 	console.log(`/getShow?id=${showID}`);
 	sendAjax('GET', `/getShow`, {id: showID}, callback);
@@ -102,7 +116,6 @@ const toggleShowinWatchlist = (e) => {
 		console.log(`/addShowToWatchlist?id=${showID}`);
 		sendAjax('GET', `/addShowToWatchlist`, {showID: showID}, function(data) {
 			console.log("addShowToWatchlist (client) returned!");
-			// window.sessionStorage.setItem("watchlist", JSON.stringify(JSON.parse(window.sessionStorage.getItem('watchlist')).push(''+showID)));
 			addToSessionWatchlist(showID);
 			eventAlert("The show has successfully been added.");
 			console.log(data);
@@ -115,7 +128,6 @@ const toggleShowinWatchlist = (e) => {
 				ReactDOM.render(
 					<ShowDetail showData = {data2} />, document.querySelector('#showDetail')
 				);
-				// document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 				document.
 					querySelectorAll("#bttn_showDetailHide").
 					forEach((elem)=>elem.addEventListener('click', (e) => {
@@ -123,9 +135,6 @@ const toggleShowinWatchlist = (e) => {
 						e.preventDefault();
 						$("#showDetail").hide(250);
 					}));
-				// document.
-				// 	querySelectorAll("#bttn_toggleShowinWatchlist").
-				// 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 				document.
 					querySelector("#bttn_toggleShowinWatchlist").
 					addEventListener('click', toggleShowinWatchlist);
@@ -137,9 +146,11 @@ const toggleShowinWatchlist = (e) => {
 // #endregion
 
 // #region ReactDom Objects
+
 /**
- * 
- * @param {Object} props An object w/ a 'shows' property.
+ * Constructs an element that represents a list of shows.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents a list of shows.
  */
 const ShowList = (props) => {
 	if (props.length === 0 || props.shows.length === 0) {
@@ -152,9 +163,6 @@ const ShowList = (props) => {
 	const list = props.shows.map(function(result) {
 		console.log(result);
 		return (
-			// <a className="ShowListing" data-id={result.id} href={`/getShow?showID=${result.id}`}> 
-			// href={`/getShow?id=${result.id}`}
-			
 			<a className="showListing" key={result.id} data-id={result.id}>
 				<img 
 					className="showListingImg"
@@ -175,8 +183,12 @@ const ShowList = (props) => {
 	);
 }
 
+/**
+ * Constructs an element that represents detailed info about a show.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents detailed info about a show.
+ */
 const ShowDetail = (props) => {
-	// if (props.length === 0 || props.shows.length === 0) {
 	if (!props.showData) {
 		return (
 			<div className="showDetail">
@@ -231,6 +243,12 @@ const ShowDetail = (props) => {
 	);
 };
 
+
+/**
+ * Constructs an element that represents a searchbar.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents a searchbar.
+ */
 const SearchbarForm = (props) => {
 	return (
 		<form
@@ -255,6 +273,9 @@ const SearchbarForm = (props) => {
 };
 // #endregion
 
+/**
+ * Refreshes the current {@linkcode Account}'s info from the server.
+ */
 const loadUserDataFromServer = () => {
 	// #region Ensures frequent resyncs
 	sendAjax('GET', '/getShows', null, (data) => {
@@ -341,12 +362,14 @@ const loadUserDataFromServer = () => {
 	// #endregion
 };
 
+/**
+ * Syncs the locally stored watchlist with the version on the server
+ */
 const syncSessionWatchlist = () => {
 	sendAjax('GET', '/getShows', null, (data) => {
 		let list = (data.watchlist) ? data.watchlist : [];
 		if (!Array.isArray(list))
 			list = (list.list && Array.isArray(list.list)) ? list.list : [];
-		// console.assert(JSON.stringify(getSessionWatchlist()) == JSON.stringify(list), `${JSON.stringify(getSessionWatchlist())} != ${JSON.stringify(list)}`);
 		window.sessionStorage.setItem("watchlist", JSON.stringify(list));
 		window.WATCHLIST_STORAGE = [];
 		console.log('watchlist.list');
@@ -355,28 +378,15 @@ const syncSessionWatchlist = () => {
 };
 
 const setup = function(csrf) {
-	ReactDOM.render(
-		<SearchbarForm csrf={csrf}/>, document.querySelector("#search")
-	);
-	
-	ReactDOM.render(
-		<ShowList shows={[]}/>, document.querySelector("#shows")
-	);
-	/**
-	 * @type {HTMLElement}
-	 */
+	ReactDOM.render(<SearchbarForm csrf={csrf}/>, document.querySelector("#search"));
+	ReactDOM.render(<ShowList shows={[]}/>, document.querySelector("#shows"));
 	document.querySelector("#shows").dataset['showsFrom'] = "watchlist";
-
 	loadUserDataFromServer();
 	$("#showDetail").hide();
 };
 
 
-const getToken = () => {
-	sendAjax('GET', '/getToken', null, (result) => {
-		setup(result.csrfToken);
-	});
-};
+const getToken = () => sendAjax('GET', '/getToken', null, (result) => setup(result.csrfToken));
 
 // #region Session Storage
 /**
@@ -399,6 +409,7 @@ const addToSessionWatchlist = (id) => (getSessionWatchlist()) ? true || JSON.str
 
 /**
  * Removes the given id from the session storage for the watchlist (if it exists).
+ * @param {string} id The id to remove.
  * @returns {boolean} true if removed, false otherwise.
  */
 const removeFromSessionWatchlist = (id) => {
@@ -412,6 +423,11 @@ const removeFromSessionWatchlist = (id) => {
 	return true;
 };
 
+/**
+ * Checks if the given id is in the session storage.
+ * @param {string} id The id to check.
+ * @returns {boolean} true if there, false otherwise.
+ */
 const isInWatchlist = (id) => {
 	let swl = getSessionWatchlist();
 	swl = (swl) ? swl : [];
@@ -425,9 +441,6 @@ const isInWatchlist = (id) => {
 // #endregion
 
 const eventAlert = (text) => {
-	/**
-	 * @type {HTMLDivElement}
-	 */
 	const eab = document.querySelector("#eventAlertBox");
 	const eam = document.querySelector("#eventAlertMessage");
 	eam.innerHTML = text;

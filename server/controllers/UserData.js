@@ -10,7 +10,7 @@ const searchShows = (req, res) => {
 };
 
 /**
- *
+ *	Renders the '/showWatchlist' page.
  * @param {Request} req
  * @param {Response} res
  */
@@ -25,16 +25,16 @@ const watchlistPage = (req, res) => {
 };
 
 /**
- *
+ * Retrieves the user's watchlist.
  * @param {Request} req
  * @param {Response} res
  */
-const getShows = (req, res) => UserData.UserDataModel.findByOwner(
+const getAccountWatchlist = (req, res) => UserData.UserDataModel.findByOwner(
 	req.session.account._id,
 	(err, docs) => {
 		if (err) {
 			console.log(err);
-			return res.status(400).json({ error: "An error occurred (no, really)" });
+			return res.status(400).json({ err });
 		}
 		return res.json({ watchlist: docs });
 	},
@@ -42,6 +42,6 @@ const getShows = (req, res) => UserData.UserDataModel.findByOwner(
 
 module.exports = {
 	watchlistPage,
-	getShows,
+	getShows: getAccountWatchlist,
 	searchShows,
 };

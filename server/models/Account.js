@@ -1,8 +1,6 @@
 const crypto = require("crypto");
 const mongoose = require("mongoose");
-const UserData = require("./UserData");
-
-const { UserDataSchema } = UserData;
+const { UserDataSchema } = require("./UserData");
 
 mongoose.Promise = global.Promise;
 
@@ -15,16 +13,10 @@ const saltLength = 64;
 const keyLength = 64;
 
 const AccountSchema = new mongoose.Schema({
-	// _id: {
-	// 	type: String,
-	// 	required: true,
-	// 	unique: true,
-	// },
 	username : {
     	type     : String,
     	required : true,
     	trim     : true,
-    	// unique: true,
     	match    : /^[A-Za-z0-9_\-.]{1,16}$/,
 	},
 	salt : {
@@ -42,9 +34,6 @@ const AccountSchema = new mongoose.Schema({
 	watchlist : {
 		type    : UserDataSchema,
 		default : {},
-		// type: Array,
-		// default: [],
-		// type: UserData.UserDataSchema,
 	},
 });
 
@@ -70,28 +59,36 @@ AccountSchema.statics.findByUsername = (name, callback) => {
 	const search = {
 		username : name,
 	};
-
 	return AccountModel.findOne(search, callback);
 };
 
 AccountSchema.statics.generateHash = (password, callback) => {
 	const salt = crypto.randomBytes(saltLength);
 
-	crypto.pbkdf2(password, salt, iterations, keyLength, "RSA-SHA512", (err, hash) => callback(salt, hash.toString("hex")));
+	crypto.pbkdf2(
+		password,
+		salt,
+		iterations,
+		keyLength,
+		"RSA-SHA512",
+		(err, hash) => callback(salt, hash.toString("hex")));
 };
 
+/**
+ * Attempts to authenticate the given user and password.
+ * @param {string} username The username
+ * @param {string} password 
+ * @param {Function} callback 
+ */
 AccountSchema.statics.authenticate = (username, password, callback) => {
 	AccountModel.findByUsername(username, (err, doc) => {
 		if (err)
 			return callback(err);
-
 		if (!doc)
 			return callback();
-
 		return validatePassword(doc, password, (result) => {
 			if (result === true)
 				return callback(null, doc);
-
 			return callback();
 		});
 	});
@@ -99,8 +96,7 @@ AccountSchema.statics.authenticate = (username, password, callback) => {
 
 AccountModel = mongoose.model("Account", AccountSchema);
 
-/**
- * @type {mongoose.Model<Document, {}>}
- */
-module.exports.AccountModel = AccountModel;
-module.exports.AccountSchema = AccountSchema;
+module.exports = {
+	AccountModel,
+	AccountSchema
+};

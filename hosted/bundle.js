@@ -22,6 +22,11 @@ var handleFormSubmission = function handleFormSubmission(e) {
   searchShows(e);
   return false;
 };
+/**
+ * Event handler that sends a request to /searchShows
+ * @param {Event} e The event arguments.
+ */
+
 
 var searchShows = function searchShows(e) {
   e.preventDefault();
@@ -46,6 +51,11 @@ var searchShows = function searchShows(e) {
     });
   });
 };
+/**
+ * A wrapper for {@linkcode requestGetShow}.
+ * @param {Event} e The event's arguments.
+ */
+
 
 var getShow = function getShow(e) {
   e.preventDefault();
@@ -66,6 +76,12 @@ var getShow = function getShow(e) {
     $("#showDetail").show(250);
   });
 };
+/**
+ * Sends a request to /getShow
+ * @param {string} showID The show to get.
+ * @param {Function} callback 
+ */
+
 
 var requestGetShow = function requestGetShow(showID, callback) {
   console.log("/getShow?id=".concat(showID));
@@ -114,8 +130,7 @@ var toggleShowinWatchlist = function toggleShowinWatchlist(e) {
     sendAjax('GET', "/addShowToWatchlist", {
       showID: showID
     }, function (data) {
-      console.log("addShowToWatchlist (client) returned!"); // window.sessionStorage.setItem("watchlist", JSON.stringify(JSON.parse(window.sessionStorage.getItem('watchlist')).push(''+showID)));
-
+      console.log("addShowToWatchlist (client) returned!");
       addToSessionWatchlist(showID);
       eventAlert("The show has successfully been added.");
       console.log(data);
@@ -124,18 +139,14 @@ var toggleShowinWatchlist = function toggleShowinWatchlist(e) {
         console.log("show rerendering!");
         ReactDOM.render( /*#__PURE__*/React.createElement(ShowDetail, {
           showData: data2
-        }), document.querySelector('#showDetail')); // document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+        }), document.querySelector('#showDetail'));
         document.querySelectorAll("#bttn_showDetailHide").forEach(function (elem) {
           return elem.addEventListener('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             $("#showDetail").hide(250);
           });
-        }); // document.
-        // 	querySelectorAll("#bttn_toggleShowinWatchlist").
-        // 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+        });
         document.querySelector("#bttn_toggleShowinWatchlist").addEventListener('click', toggleShowinWatchlist);
         $("#showDetail").show(250);
       });
@@ -145,8 +156,9 @@ var toggleShowinWatchlist = function toggleShowinWatchlist(e) {
 // #region ReactDom Objects
 
 /**
- * 
- * @param {Object} props An object w/ a 'shows' property.
+ * Constructs an element that represents a list of shows.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents a list of shows.
  */
 
 
@@ -161,36 +173,36 @@ var ShowList = function ShowList(props) {
 
   var list = props.shows.map(function (result) {
     console.log(result);
-    return (
-      /*#__PURE__*/
-      // <a className="ShowListing" data-id={result.id} href={`/getShow?showID=${result.id}`}> 
-      // href={`/getShow?id=${result.id}`}
-      React.createElement("a", {
-        className: "showListing",
-        key: result.id,
-        "data-id": result.id
-      }, /*#__PURE__*/React.createElement("img", {
-        className: "showListingImg",
-        src: resolvePosterPath(result.poster_path),
-        alt: "".concat(result.name, "'s Poster")
-      }), /*#__PURE__*/React.createElement("span", {
-        className: "showListingText"
-      }, /*#__PURE__*/React.createElement("h1", {
-        className: "showName"
-      }, result.name), /*#__PURE__*/React.createElement("h2", {
-        className: "showAirDate"
-      }, result.first_air_date), /*#__PURE__*/React.createElement("p", {
-        className: "showOverview"
-      }, result.overview)))
-    );
+    return /*#__PURE__*/React.createElement("a", {
+      className: "showListing",
+      key: result.id,
+      "data-id": result.id
+    }, /*#__PURE__*/React.createElement("img", {
+      className: "showListingImg",
+      src: resolvePosterPath(result.poster_path),
+      alt: "".concat(result.name, "'s Poster")
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "showListingText"
+    }, /*#__PURE__*/React.createElement("h1", {
+      className: "showName"
+    }, result.name), /*#__PURE__*/React.createElement("h2", {
+      className: "showAirDate"
+    }, result.first_air_date), /*#__PURE__*/React.createElement("p", {
+      className: "showOverview"
+    }, result.overview)));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "showList"
   }, list);
 };
+/**
+ * Constructs an element that represents detailed info about a show.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents detailed info about a show.
+ */
+
 
 var ShowDetail = function ShowDetail(props) {
-  // if (props.length === 0 || props.shows.length === 0) {
   if (!props.showData) {
     return /*#__PURE__*/React.createElement("div", {
       className: "showDetail"
@@ -270,6 +282,12 @@ var ShowDetail = function ShowDetail(props) {
     "data-id": props.showData.id
   }, isInWatchlist(props.showData.id) ? "-" : "+"));
 };
+/**
+ * Constructs an element that represents a searchbar.
+ * @param {*} props The properties for the element.
+ * @returns {HTMLDivElement} An element that represents a searchbar.
+ */
+
 
 var SearchbarForm = function SearchbarForm(props) {
   return /*#__PURE__*/React.createElement("form", {
@@ -305,6 +323,10 @@ var SearchbarForm = function SearchbarForm(props) {
     value: "Search"
   }));
 }; // #endregion
+
+/**
+ * Refreshes the current {@linkcode Account}'s info from the server.
+ */
 
 
 var loadUserDataFromServer = function loadUserDataFromServer() {
@@ -398,12 +420,15 @@ var loadUserDataFromServer = function loadUserDataFromServer() {
   // }
   // #endregion
 };
+/**
+ * Syncs the locally stored watchlist with the version on the server
+ */
+
 
 var syncSessionWatchlist = function syncSessionWatchlist() {
   sendAjax('GET', '/getShows', null, function (data) {
     var list = data.watchlist ? data.watchlist : [];
-    if (!Array.isArray(list)) list = list.list && Array.isArray(list.list) ? list.list : []; // console.assert(JSON.stringify(getSessionWatchlist()) == JSON.stringify(list), `${JSON.stringify(getSessionWatchlist())} != ${JSON.stringify(list)}`);
-
+    if (!Array.isArray(list)) list = list.list && Array.isArray(list.list) ? list.list : [];
     window.sessionStorage.setItem("watchlist", JSON.stringify(list));
     window.WATCHLIST_STORAGE = [];
     console.log('watchlist.list');
@@ -418,18 +443,14 @@ var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(ShowList, {
     shows: []
   }), document.querySelector("#shows"));
-  /**
-   * @type {HTMLElement}
-   */
-
   document.querySelector("#shows").dataset['showsFrom'] = "watchlist";
   loadUserDataFromServer();
   $("#showDetail").hide();
 };
 
 var getToken = function getToken() {
-  sendAjax('GET', '/getToken', null, function (result) {
-    setup(result.csrfToken);
+  return sendAjax('GET', '/getToken', null, function (result) {
+    return setup(result.csrfToken);
   });
 }; // #region Session Storage
 
@@ -457,6 +478,7 @@ var addToSessionWatchlist = function addToSessionWatchlist(id) {
 };
 /**
  * Removes the given id from the session storage for the watchlist (if it exists).
+ * @param {string} id The id to remove.
  * @returns {boolean} true if removed, false otherwise.
  */
 
@@ -472,6 +494,12 @@ var removeFromSessionWatchlist = function removeFromSessionWatchlist(id) {
   window.sessionStorage.setItem('watchlist', swl);
   return true;
 };
+/**
+ * Checks if the given id is in the session storage.
+ * @param {string} id The id to check.
+ * @returns {boolean} true if there, false otherwise.
+ */
+
 
 var isInWatchlist = function isInWatchlist(id) {
   var swl = getSessionWatchlist();
@@ -490,9 +518,6 @@ var isInWatchlist = function isInWatchlist(id) {
 
 
 var eventAlert = function eventAlert(text) {
-  /**
-   * @type {HTMLDivElement}
-   */
   var eab = document.querySelector("#eventAlertBox");
   var eam = document.querySelector("#eventAlertMessage");
   eam.innerHTML = text;

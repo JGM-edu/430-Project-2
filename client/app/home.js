@@ -1,4 +1,11 @@
 const posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
+const posterNotFoundPath = "/assets/img/posterNotFound.png";
+/**
+ * 
+ * @param {String} path The assumed path of the poster.
+ * @returns {String} The path to the poster or the default poster if missing.
+ */
+const resolvePosterPath = (path) => (path) ? posterPathRoot + path : posterNotFoundPath;
 
 const handleFormSubmission = (e) => {
 	e.preventDefault();
@@ -152,10 +159,15 @@ const ShowList = (props) => {
 			// href={`/getShow?id=${result.id}`}
 			
 			<a className="showListing" key={result.id} data-id={result.id}>
-				<img src={posterPathRoot + result.poster_path} alt={`${result.name}'s Poster`} />
-				<h1 className="showName">{result.name}</h1>
-				<h2 className="showAirDate">{result.first_air_date}</h2>
-				<p className="showOverview">{result.overview}</p>
+				<img 
+					className="showListingImg"
+					src={resolvePosterPath(result.poster_path)}
+					alt={`${result.name}'s Poster`} />
+				<span className="showListingText">
+					<h1 className="showName">{result.name}</h1>
+					<h2 className="showAirDate">{result.first_air_date}</h2>
+					<p className="showOverview">{result.overview}</p>
+				</span>
 			</a>
 		);
 	});
@@ -177,7 +189,7 @@ const ShowDetail = (props) => {
 	}
 	return (
 		<div className="showDetail" data-showID={props.showData.id} data-id={props.showData.id} data-name={props.showData.name} data-number_of_epsisodes={props.showData.number_of_epsisodes}>
-			<img src={posterPathRoot + props.showData.poster_path} alt={`${props.showData.name}'s Poster`} />
+			<img src={resolvePosterPath(props.showData.poster_path)} alt={`${props.showData.name}'s Poster`} />
 			<h1 className="name">{props.showData.name}</h1>
 			<h2 className="airDate">{props.showData.first_air_date}</h2>
 			<span className="numEpisodes">Number of Episodes: {props.showData.number_of_episodes}</span>

@@ -124,67 +124,6 @@ const makeNewWatchlist = (req, res) => {
 			res.json({ redirect: "/home" });
 		},
 	);
-	// return Account.AccountModel.findByUsername(req.session.account.username, (err, result) => {
-	// 	if (err) {
-	// 		console.log("Error in controllers/Account.js/addShowToWatchlist");
-	// 		console.log(err);
-	// 		return;
-	// 	}
-	// 	/**
-	// 	 * @type {Array}
-	// 	 */
-	// 	console.log(result);
-	// 	const watchlistData = {
-	// 		name: 'watchlist',
-	// 		createdData: Date.now(),
-	// 		owner: req.session.account,
-	// 		list: [],
-	// 	};
-
-	// 	const newWatchlist = new UserData.UserDataModel(watchlistData);
-	// 	// result.watchlist = new UserData.UserDataModel(watchlistData);
-
-	// 	// const watchlistPromise = result.set(new UserData.UserDataModel(watchlistData));
-	// 	// newWatchlist.save();
-	// 	const watchlistPromise = result.findOneAndUpdate({watchlist: undefined}, newWatchlist);
-
-	// 	watchlistPromise.then((savedResult) => {
-	// 		console.log(savedResult);
-	// 		console.assert(savedResult === result.watchlist);
-	// 		res.json({ redirect: '/home' });
-	// 	});
-
-	// 	watchlistPromise.catch((err) => {
-	// 		console.log(err);
-	// 		if (err.code === 11000) {
-	// 			return res.status(400).json({ error: 'Watchlist already exists.' });
-	// 		}
-	// 		return res.status(400).json({ error: 'An error occurred.' });
-	// 	});
-
-	// 	return watchlistPromise;
-	// 	/*
-	// 	const currWatchlist = result.get('watchlist');
-	// 	if (!currWatchlist.includes((req.body.showID) ? req.body.showID : params.showID)) {
-	// 		result.set(
-	//			'watchlist',
-	//			currWatchlist.push((req.body.showID) ? req.body.showID : params.showID));
-	// 		const promise = result.save();
-	// 		promise.then((savedResult) => {
-	// 			console.log(savedResult);
-	// 			console.assert(result === savedResult);
-	// 			res.json({redirect: '/home'});
-	// 		});
-	// 		promise.catch((err) => {
-	// 			console.log(err);
-	// 			if (err.code === 11000) {
-	// 				return res.status(400).json({ error: 'Domo already exists.' });
-	// 			}
-	// 			return res.status(400).json({ error: 'An error occurred.' });
-	// 			});
-	// 	}
-	// 	*/
-	// });
 };
 
 /**
@@ -233,7 +172,7 @@ const addShowToWatchlist = (req, res) => {
 				console.log("savedResult");
 				console.log(savedResult);
 				console.assert(result === savedResult, "Result!=savedResult");
-				console.assert(currWatchlist === savedResult.get("watchlist").list, "currWatchlist!=savedResult.watchlist.list");
+				// console.assert(currWatchlist === savedResult.get("watchlist").list, "currWatchlist!=savedResult.watchlist.list");
 				console.log("Adding to watchlist Successfully completed");
 				return res.json({ redirect: "/home" });
 			});
@@ -302,7 +241,7 @@ const removeShowFromWatchlist = (req, res) => {
 				console.log(err2);
 				if (err2.code === 11000) {
 					console.log("Adding to watchlist failed");
-					return res.status(400).json({ error: "Domo already exists." });
+					return res.status(400).json({ error: "Show already exists in watchlist." });
 				}
 				return res.status(400).json({ error: "An error occurred." });
 			});
@@ -368,10 +307,3 @@ module.exports = {
 	removeShowFromWatchlist,
 	getWatchlist,
 };
-// module.exports.loginPage			= loginPage;
-// module.exports.login				= login;
-// module.exports.logout				= logout;
-// module.exports.signup				= signup;
-// module.exports.getToken				= getToken;
-// module.exports.addShowToWatchlist 	= addShowToWatchlist;
-// // module.exports.signupPage		= signupPage;

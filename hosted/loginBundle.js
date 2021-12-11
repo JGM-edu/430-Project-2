@@ -169,7 +169,7 @@ $(document).ready(function () {
 var handleError = function handleError(err) {
   console.log('error');
   console.error(err);
-  $("#logger").text(err);
+  if (typeof err !== "string") $("#logger").text(err.error);else $("#logger").text(err);
 };
 
 var redirect = function redirect(response) {

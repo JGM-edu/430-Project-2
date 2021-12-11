@@ -3,6 +3,16 @@
 var _this = void 0;
 
 var posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
+var posterNotFoundPath = "/assets/img/posterNotFound.png";
+/**
+ * 
+ * @param {String} path The assumed path of the poster.
+ * @returns {String} The path to the poster or the default poster if missing.
+ */
+
+var resolvePosterPath = function resolvePosterPath(path) {
+  return path ? posterPathRoot + path : posterNotFoundPath;
+};
 
 var handleFormSubmission = function handleFormSubmission(e) {
   e.preventDefault();
@@ -166,15 +176,18 @@ var ShowList = function ShowList(props) {
         key: result.id,
         "data-id": result.id
       }, /*#__PURE__*/React.createElement("img", {
-        src: posterPathRoot + result.poster_path,
+        className: "showListingImg",
+        src: resolvePosterPath(result.poster_path),
         alt: "".concat(result.name, "'s Poster")
-      }), /*#__PURE__*/React.createElement("h1", {
+      }), /*#__PURE__*/React.createElement("span", {
+        className: "showListingText"
+      }, /*#__PURE__*/React.createElement("h1", {
         className: "showName"
       }, result.name), /*#__PURE__*/React.createElement("h2", {
         className: "showAirDate"
       }, result.first_air_date), /*#__PURE__*/React.createElement("p", {
         className: "showOverview"
-      }, result.overview))
+      }, result.overview)))
     );
   });
   return /*#__PURE__*/React.createElement("div", {
@@ -199,7 +212,7 @@ var ShowDetail = function ShowDetail(props) {
     "data-name": props.showData.name,
     "data-number_of_epsisodes": props.showData.number_of_epsisodes
   }, /*#__PURE__*/React.createElement("img", {
-    src: posterPathRoot + props.showData.poster_path,
+    src: resolvePosterPath(props.showData.poster_path),
     alt: "".concat(props.showData.name, "'s Poster")
   }), /*#__PURE__*/React.createElement("h1", {
     className: "name"
@@ -455,7 +468,7 @@ $(document).ready(function () {
 var handleError = function handleError(err) {
   console.log('error');
   console.error(err);
-  $("#logger").text(err);
+  if (typeof err !== "string") $("#logger").text(err.error);else $("#logger").text(err);
 };
 
 var redirect = function redirect(response) {

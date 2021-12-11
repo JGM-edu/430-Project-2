@@ -10,7 +10,7 @@ html, body {
 }
 
 /* #region Navbar */
-a[href="/login"] {
+nav a {
 	display: inline-block;
 }
 #logo {
@@ -211,7 +211,7 @@ nav:nth-child(1) {
 /* #region Main */
 #mainContentContainer {
 	width: 100%;
-	height: 100%;
+	height: min-content;
 	box-sizing: border-box;
 	padding: 5%;
 
@@ -222,12 +222,10 @@ nav:nth-child(1) {
 }
 /* #endregion */
 #shows {
+	box-sizing: border-box;
     width: 100%;
-    /* min-width: 400px; */
     border: 5px solid rgba(50,50,50, 1);
     border-radius: 4px;
-    /* margin: 0 auto; */
-    /* margin-top: 100px; */
 	
 	display: flex;
 	flex-direction: column;
@@ -235,17 +233,43 @@ nav:nth-child(1) {
 	align-content: center;
 }
 
-#showList {
-
+#showList, .showList {
+	width: 100%;
 }
 /* #region Show Listings */
-#showListing {
+.showListing {
+	width: 100%;
+	padding: 2%;
+	box-sizing: border-box;
 
-}
-#showListing > img {
-	max-width: 100%;
-}
+	display: flex;
+	align-content: flex-start;
 
+	border-radius: 4px;
+
+	transition: background-color .25s ease-in-out;
+}
+.showListing:hover {
+    background-color: rgba(101,101,101, .5);
+}
+.showListing > img {
+	max-width: 20%;
+	height: 100%;
+	padding-right: 2%;
+	object-fit: contain;
+}
+.showListing > .showListingText {
+	display: inline-block;
+	max-width: 80%;
+	/* padding: 2% 0 0 2%; */
+}
+.showListing > .showListingText > h1, 
+.showListing > .showListingText > h2, 
+.showListing > .showListingText > p {
+	margin: 0;
+}
+/* #endregion */
+/* #region Show Detail */
 #showDetail {
 	position: fixed;
 	top: 0;
@@ -264,9 +288,10 @@ nav:nth-child(1) {
 	width: 90vw;
 
 	box-sizing: border-box;
+	padding: 2%;
 
 	background-color: rgba(50,50,50, 1);
-	border: 1em solid rgba(101,101,101, 1);
+	border: .5em solid rgba(101,101,101, 1);
 	border-radius: 1%;
 }
 /* #region Buttons */
@@ -308,6 +333,7 @@ nav:nth-child(1) {
 	left: 0;
 	right: 0;
 	width: 75vw;
+	height: 50vh;
 	margin: 0 auto;
 	padding-top: 7vh;
 	
@@ -316,11 +342,8 @@ nav:nth-child(1) {
 	display: flex;
 	justify-content: space-around;
 
-	/* background-color: rgba(25,25,25, .75); */
-
 	pointer-events: none;
 	
-	/* background-color: rgba(25,25,25, .1); */
 	transition: opacity .5s;
 	opacity: 0;
 }

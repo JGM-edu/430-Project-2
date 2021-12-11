@@ -50,6 +50,7 @@ const router = require("./router");
 const app = express();
 app.disable("x-powered-by");
 app.use("/assets", express.static(path.resolve(`${__dirname}/../hosted/`)));
+app.use("/docs", express.static(path.resolve(`${__dirname}/../docs/`)));
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.use(compression());
 app.use(bodyParser.urlencoded({

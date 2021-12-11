@@ -1,3 +1,4 @@
+// #region Poster Resolution
 const posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
 const posterNotFoundPath = "/assets/img/posterNotFound.png";
 /**
@@ -6,13 +7,14 @@ const posterNotFoundPath = "/assets/img/posterNotFound.png";
  * @returns {String} The path to the poster or the default poster if missing.
  */
 const resolvePosterPath = (path) => (path) ? posterPathRoot + path : posterNotFoundPath;
+// #endregion
 
+// #region Request Event Handlers
 const handleFormSubmission = (e) => {
 	e.preventDefault();
 	searchShows(e);
 	return false;
 };
-// #region Request Event Handlers
 const searchShows = (e) => {
 	e.preventDefault();
 	console.log(`/searchShows?query=${document.querySelector("#searchbar").value}`);
@@ -39,7 +41,6 @@ const getShow = (e) => {
 		ReactDOM.render(
 			<ShowDetail showData = {data} />, document.querySelector('#showDetail')
 		);
-		// document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 		document.
 			querySelectorAll("#bttn_showDetailHide").
 			forEach((elem)=>elem.addEventListener('click', (e) => {
@@ -47,9 +48,6 @@ const getShow = (e) => {
 				e.preventDefault();
 				$("#showDetail").hide(250);
 			}));
-		// document.
-		// 	querySelectorAll("#bttn_toggleShowinWatchlist").
-		// 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 		document.
 			querySelector("#bttn_toggleShowinWatchlist").
 			addEventListener('click', toggleShowinWatchlist);
@@ -69,21 +67,23 @@ const toggleShowinWatchlist = (e) => {
 		console.log(`/removeShowFromWatchlist?id=${showID}`);
 		sendAjax('GET', `/removeShowFromWatchlist`, {showID: showID}, function(data) {
 			console.log("removeShowFromWatchlist (client) returned!");
-			// window.sessionStorage.setItem("watchlist", JSON.stringify(JSON.parse(window.sessionStorage.getItem('watchlist')).filter((elem) => !elem == showID)));
 			removeFromSessionWatchlist(showID);
 			eventAlert("The show has successfully been removed.");
-			if (document.querySelector("#shows").dataset['showsFrom'] == 'watchlist') {
+			window.STORED_SCROLL_POSITION = {
+				"x": window.scrollX,
+				"y": window.scrollY,
+			};
+			if (document.querySelector("#shows").dataset['showsFrom'] == 'watchlist')
 				loadUserDataFromServer();
-			}
 			else
 				syncSessionWatchlist();
+			window.STORED_SCROLL_POSITION = undefined;
 			console.log(data);
 			requestGetShow(showID, (data2) => {
 				console.log("show rerendering!");
 				ReactDOM.render(
 					<ShowDetail showData = {data2} />, document.querySelector('#showDetail')
 				);
-				// document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 				document.
 					querySelectorAll("#bttn_showDetailHide").
 					forEach((elem)=>elem.addEventListener('click', (e) => {
@@ -91,9 +91,6 @@ const toggleShowinWatchlist = (e) => {
 						e.preventDefault();
 						$("#showDetail").hide(250);
 					}));
-				// document.
-				// 	querySelectorAll("#bttn_toggleShowinWatchlist").
-				// 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
 				document.
 					querySelector("#bttn_toggleShowinWatchlist").
 					addEventListener('click', toggleShowinWatchlist);
@@ -221,7 +218,7 @@ const SearchbarForm = (props) => {
 			{/* <div><label htmlFor="age">Age:&nbsp;&nbsp;</label>
 			<input id="domoAge" type="text" name="age" placeholder="Domo Age"/></div> */}
 			<input type="hidden" name="_csrf" value={props.csrf}/>
-			<input className="makeDomoSubmit" type="submit" value="Make Domo"/>
+			<input className="searchSubmit" type="submit" value="Make Domo"/>
 		</form>
 	);
 };
@@ -233,12 +230,11 @@ const loadUserDataFromServer = () => {
 		let list = (data.watchlist) ? data.watchlist : [];
 		if (!Array.isArray(list))
 			list = (list.list && Array.isArray(list.list)) ? list.list : [];
-		// console.assert(JSON.stringify(getSessionWatchlist()) == JSON.stringify(list), `${JSON.stringify(getSessionWatchlist())} != ${JSON.stringify(list)}`);
 		window.sessionStorage.setItem("watchlist", JSON.stringify(list));
 		window.WATCHLIST_STORAGE = [];
 		console.log('watchlist.list');
 		console.log(list);
-		if (list.length == 0) {
+		if (list.length === 0) {
 			ReactDOM.render(
 				<ShowList shows={[]}/>, document.querySelector("#shows")
 			);
@@ -252,12 +248,17 @@ const loadUserDataFromServer = () => {
 					ReactDOM.render(
 						<ShowList shows={window.WATCHLIST_STORAGE}/>, document.querySelector("#shows")
 					);
-					/**
-					 * @type {HTMLElement}
-					 */
 					document.querySelector("#shows").dataset['showsFrom'] = "watchlist";
 					document.querySelectorAll(".showListing").forEach((elem)=>elem.addEventListener('click', getShow));
 					document.querySelectorAll(".ShowListing").forEach((elem)=>elem.addEventListener('click', getShow));
+					if (window.STORED_SCROLL_POSITION) {
+						window.scrollTo({
+							top: window.STORED_SCROLL_POSITION.x,
+							left: window.STORED_SCROLL_POSITION.y,
+							behavior: 'smooth',
+						});
+						window.STORED_SCROLL_POSITION = undefined;
+					}
 				}
 			});
 		}
@@ -324,7 +325,7 @@ const syncSessionWatchlist = () => {
 
 const setup = function(csrf) {
 	ReactDOM.render(
-		<SearchbarForm csrf={csrf}/>, document.querySelector("#makeDomo")
+		<SearchbarForm csrf={csrf}/>, document.querySelector("#search")
 	);
 	
 	ReactDOM.render(

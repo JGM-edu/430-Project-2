@@ -2,6 +2,7 @@
 
 var _this = void 0;
 
+// #region Poster Resolution
 var posterPathRoot = "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/";
 var posterNotFoundPath = "/assets/img/posterNotFound.png";
 /**
@@ -12,14 +13,15 @@ var posterNotFoundPath = "/assets/img/posterNotFound.png";
 
 var resolvePosterPath = function resolvePosterPath(path) {
   return path ? posterPathRoot + path : posterNotFoundPath;
-};
+}; // #endregion
+// #region Request Event Handlers
+
 
 var handleFormSubmission = function handleFormSubmission(e) {
   e.preventDefault();
   searchShows(e);
   return false;
-}; // #region Request Event Handlers
-
+};
 
 var searchShows = function searchShows(e) {
   e.preventDefault();
@@ -52,18 +54,14 @@ var getShow = function getShow(e) {
     console.log("getShow (client) returned!");
     ReactDOM.render( /*#__PURE__*/React.createElement(ShowDetail, {
       showData: data
-    }), document.querySelector('#showDetail')); // document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+    }), document.querySelector('#showDetail'));
     document.querySelectorAll("#bttn_showDetailHide").forEach(function (elem) {
       return elem.addEventListener('click', function (e) {
         e.stopPropagation();
         e.preventDefault();
         $("#showDetail").hide(250);
       });
-    }); // document.
-    // 	querySelectorAll("#bttn_toggleShowinWatchlist").
-    // 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+    });
     document.querySelector("#bttn_toggleShowinWatchlist").addEventListener('click', toggleShowinWatchlist);
     $("#showDetail").show(250);
   });
@@ -85,32 +83,28 @@ var toggleShowinWatchlist = function toggleShowinWatchlist(e) {
     sendAjax('GET', "/removeShowFromWatchlist", {
       showID: showID
     }, function (data) {
-      console.log("removeShowFromWatchlist (client) returned!"); // window.sessionStorage.setItem("watchlist", JSON.stringify(JSON.parse(window.sessionStorage.getItem('watchlist')).filter((elem) => !elem == showID)));
-
+      console.log("removeShowFromWatchlist (client) returned!");
       removeFromSessionWatchlist(showID);
       eventAlert("The show has successfully been removed.");
-
-      if (document.querySelector("#shows").dataset['showsFrom'] == 'watchlist') {
-        loadUserDataFromServer();
-      } else syncSessionWatchlist();
-
+      window.STORED_SCROLL_POSITION = {
+        "x": window.scrollX,
+        "y": window.scrollY
+      };
+      if (document.querySelector("#shows").dataset['showsFrom'] == 'watchlist') loadUserDataFromServer();else syncSessionWatchlist();
+      window.STORED_SCROLL_POSITION = undefined;
       console.log(data);
       requestGetShow(showID, function (data2) {
         console.log("show rerendering!");
         ReactDOM.render( /*#__PURE__*/React.createElement(ShowDetail, {
           showData: data2
-        }), document.querySelector('#showDetail')); // document.querySelectorAll(".showDetail").forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+        }), document.querySelector('#showDetail'));
         document.querySelectorAll("#bttn_showDetailHide").forEach(function (elem) {
           return elem.addEventListener('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
             $("#showDetail").hide(250);
           });
-        }); // document.
-        // 	querySelectorAll("#bttn_toggleShowinWatchlist").
-        // 	forEach((elem)=>elem.addEventListener('click', toggleShowinWatchlist));
-
+        });
         document.querySelector("#bttn_toggleShowinWatchlist").addEventListener('click', toggleShowinWatchlist);
         $("#showDetail").show(250);
       });
@@ -259,7 +253,7 @@ var SearchbarForm = function SearchbarForm(props) {
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    className: "makeDomoSubmit",
+    className: "searchSubmit",
     type: "submit",
     value: "Make Domo"
   }));
@@ -270,14 +264,13 @@ var loadUserDataFromServer = function loadUserDataFromServer() {
   // #region Ensures frequent resyncs
   sendAjax('GET', '/getShows', null, function (data) {
     var list = data.watchlist ? data.watchlist : [];
-    if (!Array.isArray(list)) list = list.list && Array.isArray(list.list) ? list.list : []; // console.assert(JSON.stringify(getSessionWatchlist()) == JSON.stringify(list), `${JSON.stringify(getSessionWatchlist())} != ${JSON.stringify(list)}`);
-
+    if (!Array.isArray(list)) list = list.list && Array.isArray(list.list) ? list.list : [];
     window.sessionStorage.setItem("watchlist", JSON.stringify(list));
     window.WATCHLIST_STORAGE = [];
     console.log('watchlist.list');
     console.log(list);
 
-    if (list.length == 0) {
+    if (list.length === 0) {
       ReactDOM.render( /*#__PURE__*/React.createElement(ShowList, {
         shows: []
       }), document.querySelector("#shows"));
@@ -293,10 +286,6 @@ var loadUserDataFromServer = function loadUserDataFromServer() {
           ReactDOM.render( /*#__PURE__*/React.createElement(ShowList, {
             shows: window.WATCHLIST_STORAGE
           }), document.querySelector("#shows"));
-          /**
-           * @type {HTMLElement}
-           */
-
           document.querySelector("#shows").dataset['showsFrom'] = "watchlist";
           document.querySelectorAll(".showListing").forEach(function (elem) {
             return elem.addEventListener('click', getShow);
@@ -304,6 +293,15 @@ var loadUserDataFromServer = function loadUserDataFromServer() {
           document.querySelectorAll(".ShowListing").forEach(function (elem) {
             return elem.addEventListener('click', getShow);
           });
+
+          if (window.STORED_SCROLL_POSITION) {
+            window.scrollTo({
+              top: window.STORED_SCROLL_POSITION.x,
+              left: window.STORED_SCROLL_POSITION.y,
+              behavior: 'smooth'
+            });
+            window.STORED_SCROLL_POSITION = undefined;
+          }
         }
       });
     }
@@ -369,7 +367,7 @@ var syncSessionWatchlist = function syncSessionWatchlist() {
 var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(SearchbarForm, {
     csrf: csrf
-  }), document.querySelector("#makeDomo"));
+  }), document.querySelector("#search"));
   ReactDOM.render( /*#__PURE__*/React.createElement(ShowList, {
     shows: []
   }), document.querySelector("#shows"));

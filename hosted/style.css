@@ -37,7 +37,11 @@ nav:nth-child(1) {
     font-size: 1.3em;
 }
 
-.navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
+.navlink a,
+.navlink a:link,
+.navlink a:visited,
+.navlink a:hover,
+.navlink a:active {
     color: white;
     text-decoration: none;
     padding: 5px;
@@ -79,13 +83,9 @@ nav:nth-child(1) {
     /* float: left; */
     color: white;
 }
-
-.searchbarForm input[type=text] {
-    /* float:left; */
-}
 /* #endregion */
 /* #region Submit Button */
-.makeDomoSubmit {
+.searchSubmit {
     transition: background-color 0.4s ease;
     display: inline;
     /* width: 90px; */
@@ -94,10 +94,13 @@ nav:nth-child(1) {
     color: white;
     text-decoration: none;
 }
-.makeDomoSubmit:link, .makeDomoSubmit:visited, .makeDomoSubmit:hover, .makeDomoSubmit:active {
+.searchSubmit:link,
+.searchSubmit:visited,
+.searchSubmit:hover,
+.searchSubmit:active {
     color: white;
 }
-.makeDomoSubmit:hover {
+.searchSubmit:hover {
     transition: background-color 0.4s ease;
     background-color: rgba(101,101,101, 1);
 }

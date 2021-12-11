@@ -67,10 +67,10 @@ const signup		= (req, res) => {
 
 	return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
 		const accountData = {
-			username : req.body.username,
+			username  : req.body.username,
 			salt,
-			password : hash,
-			watchlist: {},
+			password  : hash,
+			watchlist : {},
 		};
 
 		const newAccount = new Account.AccountModel(accountData);
@@ -172,7 +172,6 @@ const addShowToWatchlist = (req, res) => {
 				console.log("savedResult");
 				console.log(savedResult);
 				console.assert(result === savedResult, "Result!=savedResult");
-				// console.assert(currWatchlist === savedResult.get("watchlist").list, "currWatchlist!=savedResult.watchlist.list");
 				console.log("Adding to watchlist Successfully completed");
 				return res.json({ redirect: "/home" });
 			});
@@ -214,23 +213,23 @@ const removeShowFromWatchlist = (req, res) => {
 		const accountList = result.get("watchlist");
 		if (accountList === {} || !accountList || !accountList.list)
 			return makeNewWatchlist(req, res);
-		let currWatchlist = result.get("watchlist").list;
+		let currWl = result.get("watchlist").list;
 		console.log("currWatchlist");
-		console.log(currWatchlist);
-		console.assert(currWatchlist.includes((req.body.showID) ? req.body.showID : params.showID), "!currWatchlist.includes((req.body.showID) ? req.body.showID : params.showID)");
-		if (currWatchlist.includes((req.body.showID) ? req.body.showID : params.showID)) {
-			// console.assert(currWatchlist === result.get("watchlist").list);
-			currWatchlist = currWatchlist.filter(
+		console.log(currWl);
+		const temp = (req.body.showID) ? req.body.showID : params.showID;
+		console.assert(currWl.includes(temp), "!currWatchlist.includes(showID)");
+		if (currWl.includes((req.body.showID) ? req.body.showID : params.showID)) {
+			currWl = currWl.filter(
 				(elem) => elem !== ((req.body.showID) // !== might cause problems
 					? req.body.showID
 					: params.showID),
 			);
-			accountList.set("list", currWatchlist);
+			accountList.set("list", currWl);
 			result.set("watchlist", accountList);
 			const promise = result.save();
 			promise.then((savedResult) => {
 				console.log("currWatchlist");
-				console.log(currWatchlist);
+				console.log(currWl);
 				console.log("savedResult");
 				console.log(savedResult);
 				console.assert(result === savedResult, "Result!=savedResult");

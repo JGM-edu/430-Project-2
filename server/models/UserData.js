@@ -26,9 +26,9 @@ const UserDataSchema = new mongoose.Schema({
 		default  : [],
 	},
 	owner : {
-		type     : mongoose.Schema.ObjectId,
+		type : mongoose.Schema.ObjectId,
 		// required : true,
-		ref      : "Account",
+		ref  : "Account",
 	},
 	createdData : {
 		type    : Date,
